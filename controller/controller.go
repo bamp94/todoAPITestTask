@@ -14,9 +14,6 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// this variables should be specified by '--ldflags' on the building stage
-var Branch, link, author, date, summary string
-
 // Controller is presentation tier of 3-layer architecture
 type Controller struct {
 	app    application.Application
@@ -57,4 +54,6 @@ func (c Controller) initRoutes() {
 
 	c.router.GET("/swagger/*any", echoSwagger.WrapHandler)
 	c.router.GET("/healthcheck", c.healthcheck)
+
+	c.router.GET("/todos", c.getTodoList)
 }
