@@ -1,0 +1,51 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Документация для http сервера приложения",
+        "title": "CYBERZILLA API task",
+        "contact": {},
+        "license": {}
+    },
+    "paths": {
+        "/healthcheck": {
+            "get": {
+                "description": "Запускает процесс проверки всех зависимостей, необходимых для корректной работы сервера",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Служебные"
+                ],
+                "summary": "Проверка сервера",
+                "operationId": "get-string-by-int",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HealthCheck"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.HealthCheck": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "object",
+                    "properties": {
+                        "DB": {
+                            "type": "string",
+                            "example": "ok"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

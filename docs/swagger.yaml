@@ -1,0 +1,34 @@
+definitions:
+  controller.HealthCheck:
+    properties:
+      result:
+        properties:
+          DB:
+            example: ok
+            type: string
+        type: object
+    type: object
+info:
+  contact: {}
+  description: Документация для http сервера приложения
+  license: {}
+  title: CYBERZILLA API task
+paths:
+  /healthcheck:
+    get:
+      consumes:
+      - application/json
+      description: Запускает процесс проверки всех зависимостей, необходимых для корректной
+        работы сервера
+      operationId: get-string-by-int
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.HealthCheck'
+      summary: Проверка сервера
+      tags:
+      - Служебные
+swagger: "2.0"

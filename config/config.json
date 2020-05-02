@@ -1,0 +1,12 @@
+{
+  "port": 7853,
+  "logLevel": "debug",
+  "database": {
+    "name": "cyberzilla_api_task",
+    "host": "localhost",
+    "port": 18643,
+    "user": "cyberzilla_api_task",
+    "password": "Z6E4BmLb8LVsgMdB",
+    "enableSSL": false
+  }
+}

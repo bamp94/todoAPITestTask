@@ -1,0 +1,11 @@
+version: "3.0"
+
+services:
+  db:
+    image: postgres:11.2
+    environment:
+      POSTGRES_USER: "cyberzilla_api_task"
+      POSTGRES_PASSWORD: "Z6E4BmLb8LVsgMdB"
+      POSTGRES_DB: "cyberzilla_api_task"
+    ports:
+      - "18643:5432"
