@@ -62,6 +62,46 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "description": "Создает новую задачу",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Основные"
+                ],
+                "summary": "Создать задачу",
+                "operationId": "get-string-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+                        "description": "Токен списка дел",
+                        "name": "token",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Тело запроса",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.TaskDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HealthCheck"
+                        }
+                    }
+                }
             }
         }
     },
@@ -77,6 +117,18 @@
                             "example": "ok"
                         }
                     }
+                }
+            }
+        },
+        "controller.TaskDTO": {
+            "type": "object",
+            "required": [
+                "task"
+            ],
+            "properties": {
+                "task": {
+                    "type": "string",
+                    "example": "Do my homework"
                 }
             }
         }

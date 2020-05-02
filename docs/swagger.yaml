@@ -8,6 +8,14 @@ definitions:
             type: string
         type: object
     type: object
+  controller.TaskDTO:
+    properties:
+      task:
+        example: Do my homework
+        type: string
+    required:
+    - task
+    type: object
 info:
   contact: {}
   description: Документация для http сервера приложения
@@ -51,6 +59,33 @@ paths:
           schema:
             $ref: '#/definitions/controller.HealthCheck'
       summary: Взять список заданий
+      tags:
+      - Основные
+    post:
+      consumes:
+      - application/json
+      description: Создает новую задачу
+      operationId: get-string-by-int
+      parameters:
+      - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        description: Токен списка дел
+        in: query
+        name: token
+        type: string
+      - description: Тело запроса
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/controller.TaskDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.HealthCheck'
+      summary: Создать задачу
       tags:
       - Основные
 swagger: "2.0"
