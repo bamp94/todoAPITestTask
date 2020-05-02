@@ -29,10 +29,6 @@ type TodoTask struct {
 // Model is data tier of 3-layer architecture
 type Model struct {
 	db *gorm.DB
-
-	// Used for tracing during building sql query.
-	// Must be initialized separately for each query.
-	logTrace logrus.Fields
 }
 
 // New Model constructor
@@ -106,6 +102,8 @@ func (m *Model) getMigrations() []darwin.Migration {
 func (m *Model) Ping() error {
 	return m.db.DB().Ping()
 }
+
+// TodoList retrieves list of todo tasks
 func (m *Model) TodoList(token string) ([]TodoTask, error) {
 	var res []TodoTask
 	raw := m.db.Raw(`SELECT * FROM todo_tasks tls;`)
@@ -118,8 +116,19 @@ func (m *Model) TodoList(token string) ([]TodoTask, error) {
 		if gorm.IsRecordNotFoundError(err) {
 			return []TodoTask{}, ErrModelNotFound
 		}
-		logrus.WithError(err).Error("can't get todo tasks by token: %s", token)
+		logrus.WithError(err).Errorf("can't get todo tasks by token: %s", token)
 		return []TodoTask{}, ErrInternal
 	}
 	return res, nil
+}
+
+// CreateTodoTask creates todo task
+func (m *Model) CreateTodoTask(task TodoTask) error {
+	var res []TodoTask
+	raw := m.db.Raw(`INSERT INTO todo_tasks(task, authorization_token)  VALUES ($1, $2);`, task.Task, task.AuthorizationToken)
+	if err := raw.Scan(&res).Error; err != nil {
+		logrus.WithError(err).Error("can't create todo task ")
+		return ErrInternal
+	}
+	return nil
 }
