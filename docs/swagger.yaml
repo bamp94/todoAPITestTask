@@ -35,8 +35,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Запускает процесс проверки всех зависимостей, необходимых для корректной
-        работы сервера
+      description: Возвращает список заданий
       operationId: get-string-by-int
       parameters:
       - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
@@ -51,7 +50,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/controller.HealthCheck'
-      summary: Проверка сервера
+      summary: Взять список заданий
       tags:
-      - Служебные
+      - Основные
 swagger: "2.0"

@@ -33,7 +33,7 @@
         },
         "/todos": {
             "get": {
-                "description": "Запускает процесс проверки всех зависимостей, необходимых для корректной работы сервера",
+                "description": "Возвращает список заданий",
                 "consumes": [
                     "application/json"
                 ],
@@ -41,9 +41,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Служебные"
+                    "Основные"
                 ],
-                "summary": "Проверка сервера",
+                "summary": "Взять список заданий",
                 "operationId": "get-string-by-int",
                 "parameters": [
                     {
