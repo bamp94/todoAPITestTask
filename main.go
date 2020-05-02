@@ -20,7 +20,6 @@ import (
 // @description Документация для http сервера приложения
 func main() {
 	appCli := cli.NewApp()
-	appCli.Version = controller.Branch
 	if appCli.Version == "" {
 		appCli.Version = "version not specified"
 	}

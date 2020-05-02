@@ -31,4 +31,26 @@ paths:
       summary: Проверка сервера
       tags:
       - Служебные
+  /todos:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список заданий
+      operationId: get-string-by-int
+      parameters:
+      - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        description: Токен списка дел
+        in: query
+        name: token
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.HealthCheck'
+      summary: Взять список заданий
+      tags:
+      - Основные
 swagger: "2.0"

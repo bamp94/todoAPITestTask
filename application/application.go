@@ -23,3 +23,7 @@ func New(m model.Model, c config.Main) Application {
 func (a *Application) PingDatabase() error {
 	return a.model.Ping()
 }
+
+func (a *Application) TodoListTasks(token string) ([]model.TodoTask, error) {
+	return a.model.TodoList(token)
+}

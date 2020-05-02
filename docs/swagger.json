@@ -30,6 +30,39 @@
                     }
                 }
             }
+        },
+        "/todos": {
+            "get": {
+                "description": "Возвращает список заданий",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Основные"
+                ],
+                "summary": "Взять список заданий",
+                "operationId": "get-string-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+                        "description": "Токен списка дел",
+                        "name": "token",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HealthCheck"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
