@@ -8,8 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// @Summary Проверка сервера
-// @Description Запускает процесс проверки всех зависимостей, необходимых для корректной работы сервера
+// @Summary Взять список заданий
+// @Description Возвращает список заданий
 // @ID get-string-by-int
 // @Accept  json
 // @Produce  json

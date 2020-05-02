@@ -30,6 +30,39 @@
                     }
                 }
             }
+        },
+        "/todos": {
+            "get": {
+                "description": "Запускает процесс проверки всех зависимостей, необходимых для корректной работы сервера",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Служебные"
+                ],
+                "summary": "Проверка сервера",
+                "operationId": "get-string-by-int",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+                        "description": "Токен списка дел",
+                        "name": "token",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.HealthCheck"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
