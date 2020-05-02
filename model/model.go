@@ -15,6 +15,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var (
+	ErrInternal      = errors.New("Внутренняя ошибка сервера, повторите попытку позже или обратитесь к системному администратору")
+	ErrModelNotFound = errors.New("Запись не найдена")
+)
+
+type TodoTask struct {
+	ID                 int64
+	Task               string
+	AuthorizationToken string
+}
+
 // Model is data tier of 3-layer architecture
 type Model struct {
 	db *gorm.DB
@@ -23,10 +34,6 @@ type Model struct {
 	// Must be initialized separately for each query.
 	logTrace logrus.Fields
 }
-
-var (
-	errIDIsNotSpecified = errors.New("Идентификатор не задан")
-)
 
 // New Model constructor
 func NewFromConfig(config config.Database) Model {
@@ -98,4 +105,21 @@ func (m *Model) getMigrations() []darwin.Migration {
 // Ping connection with database
 func (m *Model) Ping() error {
 	return m.db.DB().Ping()
+}
+func (m *Model) TodoList(token string) ([]TodoTask, error) {
+	var res []TodoTask
+	raw := m.db.Raw(`SELECT * FROM todo_tasks tls;`)
+	if token != "" {
+		raw = m.db.Raw(`
+		SELECT * FROM todo_tasks tls
+		WHERE tls.authorization_token = ?;`, token)
+	}
+	if err := raw.Scan(&res).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return []TodoTask{}, ErrModelNotFound
+		}
+		logrus.WithError(err).Error("can't get todo tasks by token: %s", token)
+		return []TodoTask{}, ErrInternal
+	}
+	return res, nil
 }
