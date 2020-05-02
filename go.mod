@@ -9,6 +9,7 @@ require (
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-openapi/spec v0.19.7 // indirect
 	github.com/go-openapi/swag v0.19.8 // indirect
+	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gobuffalo/packr v1.30.1
 	github.com/golang/protobuf v1.3.5 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect

@@ -34,13 +34,8 @@ func (err ErrNotFound) Error() string {
 	return err.Msg
 }
 
-func (c *Controller) respondOK(ctx *gin.Context, result interface{}) {
-	ctx.JSON(http.StatusOK, gin.H{"result": result})
-}
-
-func (c *Controller) respondLoginRedirect(ctx *gin.Context) {
-	ctx.Redirect(http.StatusFound, "/login")
-	ctx.Abort()
+func (c *Controller) respondOK(ctx echo.Context, result interface{}) error {
+	return ctx.JSON(http.StatusOK, gin.H{"result": result})
 }
 
 func (c *Controller) respondError(ctx echo.Context, err error) error {

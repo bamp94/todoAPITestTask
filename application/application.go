@@ -27,3 +27,7 @@ func (a *Application) PingDatabase() error {
 func (a *Application) TodoListTasks(token string) ([]model.TodoTask, error) {
 	return a.model.TodoList(token)
 }
+
+func (a *Application) CreateTodoTask(task model.TodoTask) error {
+	return a.model.CreateTodoTask(task)
+}
