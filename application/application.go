@@ -46,10 +46,18 @@ func (a *Application) TodoTask(id int64, token string) (model.TodoTask, error) {
 	return a.model.TodoTask(id, token)
 }
 
-// CreateTodoTask creates todo task
+// UpdateTodoTask updates todo task
 func (a *Application) UpdateTodoTask(token string, task model.TodoTask) error {
 	if _, err := a.model.TodoTask(task.ID, token); err != nil {
 		return err
 	}
 	return a.model.UpdateTodoTask(task)
+}
+
+// DeleteTodoTask deletes todo task
+func (a *Application) DeleteTodoTask(taskID int64, token string) error {
+	if _, err := a.model.TodoTask(taskID, token); err != nil {
+		return err
+	}
+	return a.model.DeleteTodoTask(taskID)
 }

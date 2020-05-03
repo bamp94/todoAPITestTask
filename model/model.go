@@ -171,11 +171,24 @@ func (m *Model) TodoTask(id int64, token string) (TodoTask, error) {
 // UpdateTodoTask updates todo task
 func (m *Model) UpdateTodoTask(task TodoTask) error {
 	var res []TodoTask
-	if err := m.db.Debug().Raw(`
+	if err := m.db.Raw(`
 		UPDATE todo_tasks SET task = $1 
 		WHERE id = $2;`, task.Task, task.ID).
 		Scan(&res).Error; err != nil {
 		logrus.WithError(err).Error("can't update todo task ")
+		return ErrInternal
+	}
+	return nil
+}
+
+// DeleteTodoTask deletes todo task
+func (m *Model) DeleteTodoTask(taskID int64) error {
+	var res []TodoTask
+	if err := m.db.Raw(`
+		DELETE FROM todo_tasks 
+		WHERE id = ?;`, taskID).
+		Scan(&res).Error; err != nil {
+		logrus.WithError(err).Error("can't delete todo task ")
 		return ErrInternal
 	}
 	return nil
