@@ -81,6 +81,7 @@ func (c Controller) initRoutes() {
 	c.router.POST("/todos", c.createTodoTask)
 	c.router.GET("/todos/:id", c.getTodoTask)
 	c.router.PUT("/todos/:id", c.updateTodoTask)
+	c.router.DELETE("/todos/:id", c.deleteTodoTask)
 }
 
 func getAuthorizationToken(ctx echo.Context) (string, error) {
