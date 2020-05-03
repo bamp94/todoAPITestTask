@@ -156,6 +156,44 @@ paths:
       tags:
       - Основные
   /todos/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет задачу по id
+      parameters:
+      - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        description: Токен списка задач
+        in: query
+        name: token
+        type: string
+      - default: 1
+        description: Идентиикатор задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetTodoTaskResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrBadRequest'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrInternal'
+      summary: Удалить задачу
+      tags:
+      - Основные
     get:
       consumes:
       - application/json
