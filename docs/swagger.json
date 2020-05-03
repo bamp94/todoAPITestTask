@@ -47,7 +47,7 @@
                     {
                         "type": "string",
                         "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-                        "description": "Токен списка дел",
+                        "description": "Токен списка задач",
                         "name": "token",
                         "in": "query"
                     }
@@ -95,7 +95,7 @@
                     {
                         "type": "string",
                         "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-                        "description": "Токен списка дел",
+                        "description": "Токен списка задач",
                         "name": "token",
                         "in": "query"
                     },
@@ -148,7 +148,7 @@
                     {
                         "type": "string",
                         "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-                        "description": "Токен списка дел",
+                        "description": "Токен списка задач",
                         "name": "token",
                         "in": "query"
                     },
@@ -159,6 +159,71 @@
                         "name": "id",
                         "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.GetTodoTaskResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrInternal"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Обновляет данные задачи по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Основные"
+                ],
+                "summary": "Обновить задачу",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+                        "description": "Токен списка задач",
+                        "name": "token",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Идентиикатор задачи",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Тело запроса",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.TaskDTO"
+                        }
                     }
                 ],
                 "responses": {
@@ -276,10 +341,6 @@
         "model.TodoTask": {
             "type": "object",
             "properties": {
-                "authorizationToken": {
-                    "type": "string",
-                    "example": "kad3u452iubdifadDWA"
-                },
                 "id": {
                     "type": "integer",
                     "example": 1
@@ -287,6 +348,10 @@
                 "task": {
                     "type": "string",
                     "example": "Do my homework"
+                },
+                "todoListID": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         }

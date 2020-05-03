@@ -16,15 +16,18 @@ type GetTodoListResponse struct {
 // @Produce  json
 // @tags Основные
 // @in header
-// @Param token query string false "Токен списка дел" default(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)
+// @Param token query string false "Токен списка задач" default(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)
 // @Success 200 {object} GetTodoListResponse
 // @Failure 400 {object} ErrBadRequest
 // @Failure 404 {object} ErrNotFound
 // @Failure 500 {object} ErrInternal
 // @Router /todos [get]
 func (c *Controller) getTodoList(ctx echo.Context) error {
-	token := getAuthorizationToken(ctx)
-	res, err := c.app.TodoListTasks(token)
+	token, err := getAuthorizationToken(ctx)
+	if err != nil {
+		return c.respondError(ctx, err)
+	}
+	res, err := c.app.TodoTasksList(token)
 	if err != nil {
 		return c.respondError(ctx, err)
 	}

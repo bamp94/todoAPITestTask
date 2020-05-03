@@ -16,14 +16,17 @@ type TaskDTO struct {
 // @Produce  json
 // @tags Основные
 // @in header
-// @Param token query string false "Токен списка дел" default(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)
+// @Param token query string false "Токен списка задач" default(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)
 // @Param params body TaskDTO true "Тело запроса"
 // @Success 200 {object} OKResponse
 // @Failure 400 {object} ErrBadRequest
 // @Failure 500 {object} ErrInternal
 // @Router /todos [post]
 func (c *Controller) createTodoTask(ctx echo.Context) error {
-	token := getAuthorizationToken(ctx)
+	token, err := getAuthorizationToken(ctx)
+	if err != nil {
+		return c.respondError(ctx, err)
+	}
 	var req TaskDTO
 	if err := ctx.Bind(&req); err != nil {
 		return c.respondError(ctx, err)
@@ -31,9 +34,8 @@ func (c *Controller) createTodoTask(ctx echo.Context) error {
 	if err := ctx.Validate(&req); err != nil {
 		return c.respondError(ctx, err)
 	}
-	if err := c.app.CreateTodoTask(model.TodoTask{
-		Task:               req.Task,
-		AuthorizationToken: token,
+	if err := c.app.CreateTodoTask(token, model.TodoTask{
+		Task: req.Task,
 	}); err != nil {
 		return c.respondError(ctx, err)
 	}
