@@ -20,7 +20,6 @@
                     "Служебные"
                 ],
                 "summary": "Проверка сервера",
-                "operationId": "get-string-by-int",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -43,8 +42,7 @@
                 "tags": [
                     "Основные"
                 ],
-                "summary": "Взять список заданий",
-                "operationId": "get-string-by-int",
+                "summary": "Список заданий",
                 "parameters": [
                     {
                         "type": "string",
@@ -58,7 +56,25 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.HealthCheck"
+                            "$ref": "#/definitions/controller.GetTodoListResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrInternal"
                         }
                     }
                 }
@@ -75,7 +91,6 @@
                     "Основные"
                 ],
                 "summary": "Создать задачу",
-                "operationId": "get-string-by-int",
                 "parameters": [
                     {
                         "type": "string",
@@ -98,7 +113,77 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.HealthCheck"
+                            "$ref": "#/definitions/controller.OKResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrBadRequest"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrInternal"
+                        }
+                    }
+                }
+            }
+        },
+        "/todos/{id}": {
+            "get": {
+                "description": "Возвращает задачу по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Основные"
+                ],
+                "summary": "Задача",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+                        "description": "Токен списка дел",
+                        "name": "token",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Идентиикатор задачи",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.GetTodoTaskResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrInternal"
                         }
                     }
                 }
@@ -106,6 +191,53 @@
         }
     },
     "definitions": {
+        "controller.ErrBadRequest": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Неверный запрос"
+                }
+            }
+        },
+        "controller.ErrInternal": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Внутренняя ошибка сервера, повторите попытку позже или обратитесь к системному администратору"
+                }
+            }
+        },
+        "controller.ErrNotFound": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Запись не найдена"
+                }
+            }
+        },
+        "controller.GetTodoListResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.TodoTask"
+                    }
+                }
+            }
+        },
+        "controller.GetTodoTaskResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.TodoTask"
+                }
+            }
+        },
         "controller.HealthCheck": {
             "type": "object",
             "properties": {
@@ -120,12 +252,38 @@
                 }
             }
         },
+        "controller.OKResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "string",
+                    "example": "ok"
+                }
+            }
+        },
         "controller.TaskDTO": {
             "type": "object",
             "required": [
                 "task"
             ],
             "properties": {
+                "task": {
+                    "type": "string",
+                    "example": "Do my homework"
+                }
+            }
+        },
+        "model.TodoTask": {
+            "type": "object",
+            "properties": {
+                "authorizationToken": {
+                    "type": "string",
+                    "example": "kad3u452iubdifadDWA"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "task": {
                     "type": "string",
                     "example": "Do my homework"

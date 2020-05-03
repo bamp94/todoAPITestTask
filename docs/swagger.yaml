@@ -1,4 +1,36 @@
 definitions:
+  controller.ErrBadRequest:
+    properties:
+      error:
+        example: Неверный запрос
+        type: string
+    type: object
+  controller.ErrInternal:
+    properties:
+      error:
+        example: Внутренняя ошибка сервера, повторите попытку позже или обратитесь
+          к системному администратору
+        type: string
+    type: object
+  controller.ErrNotFound:
+    properties:
+      error:
+        example: Запись не найдена
+        type: string
+    type: object
+  controller.GetTodoListResponse:
+    properties:
+      result:
+        items:
+          $ref: '#/definitions/model.TodoTask'
+        type: array
+    type: object
+  controller.GetTodoTaskResponse:
+    properties:
+      result:
+        $ref: '#/definitions/model.TodoTask'
+        type: object
+    type: object
   controller.HealthCheck:
     properties:
       result:
@@ -8,6 +40,12 @@ definitions:
             type: string
         type: object
     type: object
+  controller.OKResponse:
+    properties:
+      result:
+        example: ok
+        type: string
+    type: object
   controller.TaskDTO:
     properties:
       task:
@@ -15,6 +53,18 @@ definitions:
         type: string
     required:
     - task
+    type: object
+  model.TodoTask:
+    properties:
+      authorizationToken:
+        example: kad3u452iubdifadDWA
+        type: string
+      id:
+        example: 1
+        type: integer
+      task:
+        example: Do my homework
+        type: string
     type: object
 info:
   contact: {}
@@ -28,7 +78,6 @@ paths:
       - application/json
       description: Запускает процесс проверки всех зависимостей, необходимых для корректной
         работы сервера
-      operationId: get-string-by-int
       produces:
       - application/json
       responses:
@@ -44,7 +93,6 @@ paths:
       consumes:
       - application/json
       description: Возвращает список заданий
-      operationId: get-string-by-int
       parameters:
       - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
         description: Токен списка дел
@@ -57,15 +105,26 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.HealthCheck'
-      summary: Взять список заданий
+            $ref: '#/definitions/controller.GetTodoListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrBadRequest'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrInternal'
+      summary: Список заданий
       tags:
       - Основные
     post:
       consumes:
       - application/json
       description: Создает новую задачу
-      operationId: get-string-by-int
       parameters:
       - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
         description: Токен списка дел
@@ -84,8 +143,55 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.HealthCheck'
+            $ref: '#/definitions/controller.OKResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrBadRequest'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrInternal'
       summary: Создать задачу
+      tags:
+      - Основные
+  /todos/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает задачу по id
+      parameters:
+      - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        description: Токен списка дел
+        in: query
+        name: token
+        type: string
+      - default: 1
+        description: Идентиикатор задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetTodoTaskResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrBadRequest'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrInternal'
+      summary: Задача
       tags:
       - Основные
 swagger: "2.0"
