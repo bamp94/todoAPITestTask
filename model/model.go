@@ -20,10 +20,16 @@ var (
 	ErrModelNotFound = errors.New("Запись не найдена")
 )
 
+type TodoList struct {
+	ID                 int64   `json:"id" example:"1"`
+	Name               string  `json:"name" example:"Dayly tasks"`
+	AuthorizationToken *string `json:"authorizationToken" example:"kad3u452iubdifadDWA"`
+}
+
 type TodoTask struct {
-	ID                 int64  `json:"id" example:"1"`
-	Task               string `json:"task" example:"Do my homework"`
-	AuthorizationToken string `json:"authorizationToken" example:"kad3u452iubdifadDWA"`
+	ID         int64  `json:"id" example:"1"`
+	TodoListID int    `json:"todoListID" example:"1"`
+	Task       string `json:"task" example:"Do my homework"`
 }
 
 // Model is data tier of 3-layer architecture
@@ -103,16 +109,29 @@ func (m *Model) Ping() error {
 	return m.db.DB().Ping()
 }
 
-// TodoList retrieves list of todo tasks
-func (m *Model) TodoList(token string) ([]TodoTask, error) {
-	var res []TodoTask
-	raw := m.db.Raw(`SELECT * FROM todo_tasks;`)
-	if token != "" {
-		raw = m.db.Raw(`
-		SELECT * FROM todo_tasks tts
-		WHERE tts.authorization_token = ?;`, token)
+// TodoList retrieves todo list
+func (m *Model) TodoList(token string) (TodoList, error) {
+	var res TodoList
+	if err := m.db.Raw(`
+		SELECT * FROM todo_lists tls
+		WHERE tls.authorization_token = ?
+		LIMIT 1;`, token).Scan(&res).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return TodoList{}, ErrModelNotFound
+		}
+		logrus.WithError(err).Errorf("can't get todo list by token: %s", token)
+		return TodoList{}, ErrInternal
 	}
-	if err := raw.Scan(&res).Error; err != nil {
+	return res, nil
+}
+
+// TodoTasks retrieves todo tasks by token
+func (m *Model) TodoTasks(token string) ([]TodoTask, error) {
+	var res []TodoTask
+	if err := m.db.Raw(`
+		SELECT * FROM todo_tasks tts
+		JOIN todo_lists tls ON tls.id = tts.todo_list_id AND  tls.authorization_token = ?;`, token).
+		Scan(&res).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return []TodoTask{}, ErrModelNotFound
 		}
@@ -123,9 +142,9 @@ func (m *Model) TodoList(token string) ([]TodoTask, error) {
 }
 
 // CreateTodoTask creates todo task
-func (m *Model) CreateTodoTask(task TodoTask) error {
+func (m *Model) CreateTodoTask(todoListID int64, task TodoTask) error {
 	var res []TodoTask
-	raw := m.db.Raw(`INSERT INTO todo_tasks(task, authorization_token)  VALUES ($1, $2);`, task.Task, task.AuthorizationToken)
+	raw := m.db.Raw(`INSERT INTO todo_tasks(todo_list_id, task)  VALUES ($1, $2);`, todoListID, task.Task)
 	if err := raw.Scan(&res).Error; err != nil {
 		logrus.WithError(err).Error("can't create todo task ")
 		return ErrInternal
@@ -134,22 +153,30 @@ func (m *Model) CreateTodoTask(task TodoTask) error {
 }
 
 // TodoTask retrieves todo task
-func (m *Model) TodoTask(id int, token string) (TodoTask, error) {
+func (m *Model) TodoTask(id int64, token string) (TodoTask, error) {
 	var res TodoTask
-	raw := m.db.Raw(`
+	if err := m.db.Raw(`
 		SELECT * FROM todo_tasks tts 
-		WHERE tts.id = ?;`, id)
-	if token != "" {
-		raw = m.db.Raw(`
-		SELECT * FROM todo_tasks tts 
-		WHERE tts.id = $1 AND tts.authorization_token = $2;`, id, token)
-	}
-	if err := raw.Scan(&res).Error; err != nil {
+		JOIN todo_lists tls ON tls.id = tts.todo_list_id AND  tls.authorization_token = $1
+		WHERE tts.id = $2;`, token, id).Scan(&res).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return TodoTask{}, ErrModelNotFound
 		}
-		logrus.WithError(err).Errorf("can't get todo task by id: %s", id)
+		logrus.WithError(err).Errorf("can't get todo task by id: %v", id)
 		return TodoTask{}, ErrInternal
 	}
 	return res, nil
+}
+
+// UpdateTodoTask updates todo task
+func (m *Model) UpdateTodoTask(task TodoTask) error {
+	var res []TodoTask
+	if err := m.db.Debug().Raw(`
+		UPDATE todo_tasks SET task = $1 
+		WHERE id = $2;`, task.Task, task.ID).
+		Scan(&res).Error; err != nil {
+		logrus.WithError(err).Error("can't update todo task ")
+		return ErrInternal
+	}
+	return nil
 }

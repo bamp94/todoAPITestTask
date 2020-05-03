@@ -56,15 +56,15 @@ definitions:
     type: object
   model.TodoTask:
     properties:
-      authorizationToken:
-        example: kad3u452iubdifadDWA
-        type: string
       id:
         example: 1
         type: integer
       task:
         example: Do my homework
         type: string
+      todoListID:
+        example: 1
+        type: integer
     type: object
 info:
   contact: {}
@@ -95,7 +95,7 @@ paths:
       description: Возвращает список заданий
       parameters:
       - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-        description: Токен списка дел
+        description: Токен списка задач
         in: query
         name: token
         type: string
@@ -127,7 +127,7 @@ paths:
       description: Создает новую задачу
       parameters:
       - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-        description: Токен списка дел
+        description: Токен списка задач
         in: query
         name: token
         type: string
@@ -162,7 +162,7 @@ paths:
       description: Возвращает задачу по id
       parameters:
       - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-        description: Токен списка дел
+        description: Токен списка задач
         in: query
         name: token
         type: string
@@ -192,6 +192,50 @@ paths:
           schema:
             $ref: '#/definitions/controller.ErrInternal'
       summary: Задача
+      tags:
+      - Основные
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные задачи по id
+      parameters:
+      - default: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        description: Токен списка задач
+        in: query
+        name: token
+        type: string
+      - default: 1
+        description: Идентиикатор задачи
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Тело запроса
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/controller.TaskDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetTodoTaskResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrBadRequest'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controller.ErrNotFound'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrInternal'
+      summary: Обновить задачу
       tags:
       - Основные
 swagger: "2.0"

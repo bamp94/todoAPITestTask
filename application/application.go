@@ -24,17 +24,32 @@ func (a *Application) PingDatabase() error {
 	return a.model.Ping()
 }
 
-// TodoListTasks retrieves list of todo tasks
-func (a *Application) TodoListTasks(token string) ([]model.TodoTask, error) {
-	return a.model.TodoList(token)
+// TodoTasksList retrieves list of todo tasks
+func (a *Application) TodoTasksList(token string) ([]model.TodoTask, error) {
+	if _, err := a.model.TodoList(token); err != nil {
+		return []model.TodoTask{}, err
+	}
+	return a.model.TodoTasks(token)
 }
 
 // CreateTodoTask creates todo task
-func (a *Application) CreateTodoTask(task model.TodoTask) error {
-	return a.model.CreateTodoTask(task)
+func (a *Application) CreateTodoTask(token string, task model.TodoTask) error {
+	todoList, err := a.model.TodoList(token)
+	if err != nil {
+		return err
+	}
+	return a.model.CreateTodoTask(todoList.ID, task)
 }
 
 // TodoTask retrieves todo task
-func (a *Application) TodoTask(id int, token string) (model.TodoTask, error) {
+func (a *Application) TodoTask(id int64, token string) (model.TodoTask, error) {
 	return a.model.TodoTask(id, token)
+}
+
+// CreateTodoTask creates todo task
+func (a *Application) UpdateTodoTask(token string, task model.TodoTask) error {
+	if _, err := a.model.TodoTask(task.ID, token); err != nil {
+		return err
+	}
+	return a.model.UpdateTodoTask(task)
 }

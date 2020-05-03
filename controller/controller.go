@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -15,6 +16,9 @@ import (
 	"github.com/sirupsen/logrus"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
+
+var errWrongTodoTaskID = errors.New("Неправильно задан ID задачи")
+var errEmptyAuthorizationToken = errors.New("Не задан авторизационный токен")
 
 // Controller is presentation tier of 3-layer architecture
 type Controller struct {
@@ -76,18 +80,19 @@ func (c Controller) initRoutes() {
 	c.router.GET("/todos", c.getTodoList)
 	c.router.POST("/todos", c.createTodoTask)
 	c.router.GET("/todos/:id", c.getTodoTask)
+	c.router.PUT("/todos/:id", c.updateTodoTask)
 }
 
-func getAuthorizationToken(ctx echo.Context) string {
+func getAuthorizationToken(ctx echo.Context) (string, error) {
 	auth := ctx.Request().Header.Get("Authorization")
 	token := ctx.QueryParam("token")
 	switch {
 	case auth != "":
-		return auth
+		return auth, nil
 	case token != "":
-		return token
+		return token, nil
 	default:
-		return ""
+		return "", errEmptyAuthorizationToken
 	}
 }
 
