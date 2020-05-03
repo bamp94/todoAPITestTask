@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4/middleware"
@@ -64,14 +65,20 @@ func (c Controller) initRoutes() {
 	// init validator
 	c.router.Validator = &CustomValidator{validator: validator.New()}
 
+	// init logger
+	c.router.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "time=${time_rfc3339_nano}, method=${method}, uri=${uri}, status=${status}\n",
+	}))
+
 	c.router.GET("/swagger/*any", echoSwagger.WrapHandler)
 	c.router.GET("/healthcheck", c.healthcheck)
 
 	c.router.GET("/todos", c.getTodoList)
 	c.router.POST("/todos", c.createTodoTask)
+	c.router.GET("/todos/:id", c.getTodoTask)
 }
 
-func (c Controller) getAuthorizationToken(ctx echo.Context) string {
+func getAuthorizationToken(ctx echo.Context) string {
 	auth := ctx.Request().Header.Get("Authorization")
 	token := ctx.QueryParam("token")
 	switch {
@@ -82,4 +89,12 @@ func (c Controller) getAuthorizationToken(ctx echo.Context) string {
 	default:
 		return ""
 	}
+}
+
+func getIntParam(ctx echo.Context, name string) (int, error) {
+	param, err := strconv.Atoi(ctx.Param(name))
+	if err != nil {
+		return 0, err
+	}
+	return param, nil
 }
