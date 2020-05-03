@@ -24,10 +24,17 @@ func (a *Application) PingDatabase() error {
 	return a.model.Ping()
 }
 
+// TodoListTasks retrieves list of todo tasks
 func (a *Application) TodoListTasks(token string) ([]model.TodoTask, error) {
 	return a.model.TodoList(token)
 }
 
+// CreateTodoTask creates todo task
 func (a *Application) CreateTodoTask(task model.TodoTask) error {
 	return a.model.CreateTodoTask(task)
+}
+
+// TodoTask retrieves todo task
+func (a *Application) TodoTask(id int, token string) (model.TodoTask, error) {
+	return a.model.TodoTask(id, token)
 }
