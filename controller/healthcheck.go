@@ -15,7 +15,6 @@ type HealthCheck struct {
 
 // @Summary Проверка сервера
 // @Description Запускает процесс проверки всех зависимостей, необходимых для корректной работы сервера
-// @ID get-string-by-int
 // @Accept  json
 // @Produce  json
 // @tags Служебные

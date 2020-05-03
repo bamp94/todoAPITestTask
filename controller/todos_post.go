@@ -12,17 +12,18 @@ type TaskDTO struct {
 
 // @Summary Создать задачу
 // @Description Создает новую задачу
-// @ID get-string-by-int
 // @Accept  json
 // @Produce  json
 // @tags Основные
 // @in header
 // @Param token query string false "Токен списка дел" default(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)
 // @Param params body TaskDTO true "Тело запроса"
-// @Success 200 {object} HealthCheck
+// @Success 200 {object} OKResponse
+// @Failure 400 {object} ErrBadRequest
+// @Failure 500 {object} ErrInternal
 // @Router /todos [post]
 func (c *Controller) createTodoTask(ctx echo.Context) error {
-	token := c.getAuthorizationToken(ctx)
+	token := getAuthorizationToken(ctx)
 	var req TaskDTO
 	if err := ctx.Bind(&req); err != nil {
 		return c.respondError(ctx, err)

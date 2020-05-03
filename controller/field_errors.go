@@ -21,17 +21,24 @@ func (f FieldErrors) Error() string {
 	return str
 }
 
-// ErrNotFound implements error for HTTP 404
-type ErrNotFound struct {
-	Msg string
+// ErrInternal struct for swagger example response 500
+type ErrInternal struct {
+	Error string `json:"error" example:"Внутренняя ошибка сервера, повторите попытку позже или обратитесь к системному администратору"`
 }
 
-// Error implements error interface
-func (err ErrNotFound) Error() string {
-	if err.Msg == "" {
-		return "Запись не найдена"
-	}
-	return err.Msg
+// ErrNotFound struct for swagger example response 404
+type ErrNotFound struct {
+	Error string `json:"error" example:"Запись не найдена"`
+}
+
+// ErrBadRequest struct for swagger example response 400
+type ErrBadRequest struct {
+	Error string `json:"error" example:"Неверный запрос"`
+}
+
+// OKResponse struct for swagger example response 200
+type OKResponse struct {
+	Result string `json:"result" example:"ok"`
 }
 
 func (c *Controller) respondOK(ctx echo.Context, result interface{}) error {
