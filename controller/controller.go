@@ -77,11 +77,15 @@ func (c Controller) initRoutes() {
 	c.router.GET("/swagger/*any", echoSwagger.WrapHandler)
 	c.router.GET("/healthcheck", c.healthcheck)
 
+	// CRUD of todo tasks
 	c.router.GET("/todos", c.getTodoList)
 	c.router.POST("/todos", c.createTodoTask)
 	c.router.GET("/todos/:id", c.getTodoTask)
 	c.router.PUT("/todos/:id", c.updateTodoTask)
 	c.router.DELETE("/todos/:id", c.deleteTodoTask)
+
+	// Check proxy list
+	c.router.POST("/check", c.checkProxyServers)
 }
 
 func getAuthorizationToken(ctx echo.Context) (string, error) {
