@@ -89,7 +89,7 @@ func (a *Application) ProxyServersStatuses(proxyServersList []string) []ProxySer
 	resp_chan := make(chan QueryResp, 10)
 	var proxyNumber int
 	for _, server := range proxyServersList {
-		if !a.validateIPPort(server) {
+		if !validateIPPort(server) {
 			statuses = append(statuses, ProxyServersStatus{server, "Invalid"})
 			continue
 		}
@@ -110,7 +110,7 @@ func (a *Application) ProxyServersStatuses(proxyServersList []string) []ProxySer
 }
 
 // validateIPPort check if text validate on ip:port
-func (a *Application) validateIPPort(text string) bool {
+func validateIPPort(text string) bool {
 	re := regexp.MustCompile(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]+$`)
 	return re.MatchString(text)
 }
