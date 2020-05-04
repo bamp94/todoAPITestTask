@@ -8,5 +8,6 @@
     "user": "cyberzilla_api_task",
     "password": "Z6E4BmLb8LVsgMdB",
     "enableSSL": false
-  }
+  },
+  "proxyCheckTimeout": 15
 }
