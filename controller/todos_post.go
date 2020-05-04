@@ -14,7 +14,7 @@ type TaskDTO struct {
 // @Description Создает новую задачу
 // @Accept  json
 // @Produce  json
-// @tags Основные
+// @tags TODO
 // @in header
 // @Param token query string false "Токен списка задач" default(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)
 // @Param params body TaskDTO true "Тело запроса"
