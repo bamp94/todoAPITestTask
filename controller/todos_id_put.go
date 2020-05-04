@@ -10,7 +10,7 @@ import (
 // @Description Обновляет данные задачи по id
 // @Accept  json
 // @Produce  json
-// @tags Основные
+// @tags TODO
 // @in header
 // @Param token query string false "Токен списка задач" default(eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9)
 // @Param id path int true "Идентиикатор задачи" default(1)

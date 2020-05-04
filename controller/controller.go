@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/go-playground/validator"
-	"github.com/labstack/echo/v4/middleware"
-
 	"cyberzilla_api_task/application"
 	"cyberzilla_api_task/config"
 
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
@@ -77,11 +76,15 @@ func (c Controller) initRoutes() {
 	c.router.GET("/swagger/*any", echoSwagger.WrapHandler)
 	c.router.GET("/healthcheck", c.healthcheck)
 
+	// CRUD of todo tasks
 	c.router.GET("/todos", c.getTodoList)
 	c.router.POST("/todos", c.createTodoTask)
 	c.router.GET("/todos/:id", c.getTodoTask)
 	c.router.PUT("/todos/:id", c.updateTodoTask)
 	c.router.DELETE("/todos/:id", c.deleteTodoTask)
+
+	// Check proxy list
+	c.router.POST("/check", c.checkProxyServers)
 }
 
 func getAuthorizationToken(ctx echo.Context) (string, error) {

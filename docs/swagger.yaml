@@ -46,6 +46,19 @@ definitions:
         example: ok
         type: string
     type: object
+  controller.ProxyDTO:
+    properties:
+      proxyServers:
+        example:
+        - 192.168.1.1:80
+        - 172.24.130.50:256
+        - 5.196.246.54:8080
+        items:
+          type: string
+        type: array
+    required:
+    - proxyServers
+    type: object
   controller.TaskDTO:
     properties:
       task:
@@ -72,6 +85,36 @@ info:
   license: {}
   title: CYBERZILLA API task
 paths:
+  /check:
+    post:
+      consumes:
+      - application/json
+      description: Проверяет список прокси серверов и возвращает их статус
+      parameters:
+      - description: Тело запроса
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/controller.ProxyDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.OKResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controller.ErrBadRequest'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controller.ErrInternal'
+      summary: Проверить прокси
+      tags:
+      - Proxy
   /healthcheck:
     get:
       consumes:
@@ -87,7 +130,7 @@ paths:
             $ref: '#/definitions/controller.HealthCheck'
       summary: Проверка сервера
       tags:
-      - Служебные
+      - Service
   /todos:
     get:
       consumes:
@@ -120,7 +163,7 @@ paths:
             $ref: '#/definitions/controller.ErrInternal'
       summary: Список заданий
       tags:
-      - Основные
+      - TODO
     post:
       consumes:
       - application/json
@@ -154,7 +197,7 @@ paths:
             $ref: '#/definitions/controller.ErrInternal'
       summary: Создать задачу
       tags:
-      - Основные
+      - TODO
   /todos/{id}:
     delete:
       consumes:
@@ -193,7 +236,7 @@ paths:
             $ref: '#/definitions/controller.ErrInternal'
       summary: Удалить задачу
       tags:
-      - Основные
+      - TODO
     get:
       consumes:
       - application/json
@@ -231,7 +274,7 @@ paths:
             $ref: '#/definitions/controller.ErrInternal'
       summary: Задача
       tags:
-      - Основные
+      - TODO
     put:
       consumes:
       - application/json
@@ -275,5 +318,5 @@ paths:
             $ref: '#/definitions/controller.ErrInternal'
       summary: Обновить задачу
       tags:
-      - Основные
+      - TODO
 swagger: "2.0"

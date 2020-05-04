@@ -4,15 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
 
 // Main configuration of the project
 type Main struct {
-	Port     int      `json:"port" binding:"min=1,max=65535"`
-	LogLevel string   `json:"logLevel"`
-	DB       Database `json:"database"`
+	Port              int           `json:"port" binding:"min=1,max=65535"`
+	LogLevel          string        `json:"logLevel"`
+	DB                Database      `json:"database"`
+	ProxyCheckTimeout time.Duration `json:"proxyCheckTimeout"`
 }
 
 // Database configuration

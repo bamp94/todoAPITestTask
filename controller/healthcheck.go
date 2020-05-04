@@ -17,7 +17,7 @@ type HealthCheck struct {
 // @Description Запускает процесс проверки всех зависимостей, необходимых для корректной работы сервера
 // @Accept  json
 // @Produce  json
-// @tags Служебные
+// @tags Service
 // @Success 200 {object} HealthCheck
 // @Router /healthcheck [get]
 func (c *Controller) healthcheck(ctx echo.Context) error {
