@@ -6,13 +6,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/go-playground/validator"
-	"github.com/labstack/echo/v4/middleware"
-
 	"cyberzilla_api_task/application"
 	"cyberzilla_api_task/config"
 
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )

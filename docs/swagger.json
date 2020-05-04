@@ -7,6 +7,52 @@
         "license": {}
     },
     "paths": {
+        "/check": {
+            "post": {
+                "description": "Проверяет список прокси серверов и возвращает их статус",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Proxy"
+                ],
+                "summary": "Проверить прокси",
+                "parameters": [
+                    {
+                        "description": "Тело запроса",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.ProxyDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controller.OKResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrBadRequest"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controller.ErrInternal"
+                        }
+                    }
+                }
+            }
+        },
         "/healthcheck": {
             "get": {
                 "description": "Запускает процесс проверки всех зависимостей, необходимых для корректной работы сервера",
@@ -17,7 +63,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Служебные"
+                    "Service"
                 ],
                 "summary": "Проверка сервера",
                 "responses": {
@@ -40,7 +86,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Основные"
+                    "TODO"
                 ],
                 "summary": "Список заданий",
                 "parameters": [
@@ -88,7 +134,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Основные"
+                    "TODO"
                 ],
                 "summary": "Создать задачу",
                 "parameters": [
@@ -141,7 +187,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Основные"
+                    "TODO"
                 ],
                 "summary": "Задача",
                 "parameters": [
@@ -197,7 +243,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Основные"
+                    "TODO"
                 ],
                 "summary": "Обновить задачу",
                 "parameters": [
@@ -262,7 +308,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Основные"
+                    "TODO"
                 ],
                 "summary": "Удалить задачу",
                 "parameters": [
@@ -379,6 +425,25 @@
                 "result": {
                     "type": "string",
                     "example": "ok"
+                }
+            }
+        },
+        "controller.ProxyDTO": {
+            "type": "object",
+            "required": [
+                "proxyServers"
+            ],
+            "properties": {
+                "proxyServers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "192.168.1.1:80",
+                        "172.24.130.50:256",
+                        "5.196.246.54:8080"
+                    ]
                 }
             }
         },
